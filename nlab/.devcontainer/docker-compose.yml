@@ -1,0 +1,44 @@
+services:
+  mysql_db:
+    hostname: mysql_db
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../scripts:/tmp/scripts
+      
+  flyway:
+    hostname: flyway
+    image: flyway/flyway
+    volumes:
+      - ../scripts:/flyway/sql
+    environment:
+      FLYWAY_URL: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}
+      FLYWAY_USER: ${MYSQL_USER}
+      FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
+    command: -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    depends_on:
+      - mysql_db
+
+  nginx_service:
+    hostname: nginx_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    # command: sleep infinity
+    volumes:
+      - ..:/workspace:cached
+      - ../src:/var/www/html:cached
+    depends_on:
+      - mysql_db
+
+volumes:
+  dbdata:

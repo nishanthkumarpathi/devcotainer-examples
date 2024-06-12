@@ -1,0 +1,9 @@
+{
+    "name": "nlab",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "nginx_service",
+    "workspaceFolder": "/${localWorkspaceFolderBasename}",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind,consistency=cached"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "name": "nlab",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "nlabservice",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached"
+    ]
+}
